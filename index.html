@@ -412,201 +412,144 @@
         </div>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const humanCharacter = document.getElementById('humanCharacter');
-            const prevBtn = document.getElementById('prevBtn');
-            const nextBtn = document.getElementById('nextBtn');
-            const progressText = document.getElementById('progressText');
-            const milestoneTitle = document.getElementById('milestoneTitle');
-            const milestoneDescription = document.getElementById('milestoneDescription');
-            const resourcesList = document.getElementById('resourcesList');
-            const celebration = document.getElementById('celebration');
-            
-            const milestones = [
-                {
-                    title: "Starting Point",
-                    description: "You're at the beginning of your exciting cybersecurity journey. Everyone starts somewhere, and this is your starting line! Embrace the learning process and enjoy each step forward.",
-                    resources: ["Take an assessment of your current skills", "Set clear, achievable goals for your learning journey", "Create a study schedule that works for you", "Join online cybersecurity communities"]
-                },
-                {
-                    title: "Programming Basics",
-                    description: "Learn fundamental programming concepts that are essential for cybersecurity professionals. Start with Python as it's widely used in security tools and has a gentle learning curve.",
-                    resources: ["Codecademy Python course", "freeCodeCamp's Python tutorial", "Practice on HackerRank", "Read 'Automate the Boring Stuff with Python'", "Try Python for Everybody course on Coursera"]
-                },
-                {
-                    title: "Operating Systems",
-                    description: "Understand how operating systems work, with focus on Windows and Linux internals, process management, and memory allocation. This knowledge is crucial for understanding system vulnerabilities.",
-                    resources: ["Microsoft Windows documentation", "Linux Journey website", "TryHackMe OS modules", "Coursera Operating Systems courses", "Play with VirtualBox and different OS installations"]
-                },
-                {
-                    title: "Database Fundamentals",
-                    description: "Learn about database management systems, SQL queries, and database security principles which are crucial for securing data against injection attacks and other vulnerabilities.",
-                    resources: ["W3Schools SQL Tutorial", "Khan Academy SQL course", "Practice SQL injection challenges on HackTheBox", "Database Systems textbook by Ramakrishnan", "Try MySQL or PostgreSQL hands-on projects"]
-                },
-                {
-                    title: "Linux Essentials",
-                    description: "Master the Linux command line, file systems, permissions, and basic system administration tasks. Linux skills are absolutely essential for cybersecurity professionals.",
-                    resources: ["Linux Command Line Basics on Udacity", "OverTheWire Bandit wargame", "Linux Journey website", "Try out different Linux distributions", "Complete Linux命令行与Shell脚本编程大全"]
-                },
-                {
-                    title: "Scripting Skills",
-                    description: "Develop scripting abilities to automate tasks. Focus on Bash and Python scripting for security automation. Scripting will make you much more efficient in your work.",
-                    resources: ["Bash scripting tutorials", "Python for Security automation", "Practice on Exercism", "Read 'Black Hat Python'", "Try automating routine tasks with scripts"]
-                },
-                {
-                    title: "Networking Basics",
-                    description: "Learn networking fundamentals including TCP/IP, DNS, HTTP/HTTPS, firewalls, and network protocols. Understanding networks is critical for cybersecurity.",
-                    resources: ["Cisco Networking Basics", "Professor Messer Network+ videos", "Wireshark tutorials", "TryHackMe Networking rooms", "Read 'TCP/IP Illustrated' by Richard Stevens"]
-                },
-                {
-                    title: "Security Fundamentals",
-                    description: "Study core security concepts including encryption, authentication, access control, and security policies. This is where you start thinking like a security professional.",
-                    resources: ["Cybrary Security courses", "Coursera Cybersecurity Specialization", "OWASP Top 10", "Security+ Certification study materials", "Try capture the flag (CTF) challenges"]
-                },
-                {
-                    title: "Cybersecurity Architect",
-                    description: "Congratulations! You've reached your goal! You now have the skills to design secure systems and lead security initiatives. Continue growing and learning in this exciting field.",
-                    resources: ["Continue learning with advanced courses", "Participate in CTF competitions", "Join security communities", "Consider professional certifications like CISSP", "Start a blog to share your knowledge"]
-                }
-            ];
-
-            // Load saved progress or set to 0              
-            let currentMilestone = localStorage.getItem('cyberProgress') ? parseInt(localStorage.getItem('cyberProgress')) : 0;
-            const totalMilestones = milestones.length - 1;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            currentMilestone = 1;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            // Set initial position
-            updatePosition();
-            
-            // Event listeners for buttons
-            prevBtn.addEventListener('click', function() {
-                if (currentMilestone > 0) {
-                    currentMilestone--;
-                    saveProgress();
-                    updatePosition();
-                }
-            });
-            
-            nextBtn.addEventListener('click', function() {
-                if (currentMilestone < totalMilestones) {
-                    currentMilestone++;
-                    saveProgress();
-                    updatePosition();
-                    
-                    // Show celebration for completing a milestone (except for the first one)
-                    if (currentMilestone > 0) {
-                        setTimeout(() => {
-                            celebration.classList.add('active');
-                        }, 1000);
-                    }
-                }
-            });
-            
-            // Add click events to checkpoints
-            document.querySelectorAll('.checkpoint').forEach(checkpoint => {
-                checkpoint.addEventListener('click', function() {
-                    const newMilestone = parseInt(this.getAttribute('data-milestone'));
-                    if (newMilestone <= currentMilestone) { // Only allow going to already reached milestones
-                        currentMilestone = newMilestone;
-                        saveProgress();
-                        updatePosition();
-                    }
-                });
-            });
-            
-            function updatePosition() {
-                // Calculate position percentage (10% to 90% of the path)
-                const position = 10 + (currentMilestone * 10);
-                humanCharacter.style.left = `calc(${position}% - 30px)`;
-                
-                // Update progress text
-                const percentage = Math.round((currentMilestone / totalMilestones) * 100);
-                progressText.textContent = `You are at: ${milestones[currentMilestone].title} (${percentage}%)`;
-                
-                // Update milestone details
-                milestoneTitle.textContent = milestones[currentMilestone].title;
-                milestoneDescription.textContent = milestones[currentMilestone].description;
-                
-                // Update resources
-                resourcesList.innerHTML = '';
-                milestones[currentMilestone].resources.forEach(resource => {
-                    const li = document.createElement('li');
-                    li.textContent = resource;
-                    resourcesList.appendChild(li);
-                });
-                
-                // Update button states
-                prevBtn.disabled = currentMilestone === 1;
-                nextBtn.disabled = currentMilestone === totalMilestones;
-                
-                // Add visual effect to current checkpoint
-                document.querySelectorAll('.checkpoint').forEach(cp => {
-                    cp.style.background = '#fd79a8';
-                    cp.style.transform = 'scale(1)';
-                });
-                
-                const currentCheckpoint = document.querySelector(`.checkpoint[data-milestone="${currentMilestone}"]`);
-                if (currentCheckpoint) {
-                    currentCheckpoint.style.background = '#6a11cb';
-                    currentCheckpoint.style.transform = 'scale(1.3)';
-                }
+   <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const humanCharacter = document.getElementById('humanCharacter');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const progressText = document.getElementById('progressText');
+        const milestoneTitle = document.getElementById('milestoneTitle');
+        const milestoneDescription = document.getElementById('milestoneDescription');
+        const resourcesList = document.getElementById('resourcesList');
+        const celebration = document.getElementById('celebration');
+        
+        const milestones = [
+            {
+                title: "Starting Point",
+                description: "You're at the beginning of your exciting cybersecurity journey. Everyone starts somewhere, and this is your starting line! Embrace the learning process and enjoy each step forward.",
+                resources: ["Take an assessment of your current skills", "Set clear, achievable goals for your learning journey", "Create a study schedule that works for you", "Join online cybersecurity communities"]
+            },
+            {
+                title: "Programming Basics",
+                description: "Learn fundamental programming concepts that are essential for cybersecurity professionals. Start with Python as it's widely used in security tools and has a gentle learning curve.",
+                resources: ["Codecademy Python course", "freeCodeCamp's Python tutorial", "Practice on HackerRank", "Read 'Automate the Boring Stuff with Python'", "Try Python for Everybody course on Coursera"]
+            },
+            {
+                title: "Operating Systems",
+                description: "Understand how operating systems work, with focus on Windows and Linux internals, process management, and memory allocation. This knowledge is crucial for understanding system vulnerabilities.",
+                resources: ["Microsoft Windows documentation", "Linux Journey website", "TryHackMe OS modules", "Coursera Operating Systems courses", "Play with VirtualBox and different OS installations"]
+            },
+            {
+                title: "Database Fundamentals",
+                description: "Learn about database management systems, SQL queries, and database security principles which are crucial for securing data against injection attacks and other vulnerabilities.",
+                resources: ["W3Schools SQL Tutorial", "Khan Academy SQL course", "Practice SQL injection challenges on HackTheBox", "Database Systems textbook by Ramakrishnan", "Try MySQL or PostgreSQL hands-on projects"]
+            },
+            {
+                title: "Linux Essentials",
+                description: "Master the Linux command line, file systems, permissions, and basic system administration tasks. Linux skills are absolutely essential for cybersecurity professionals.",
+                resources: ["Linux Command Line Basics on Udacity", "OverTheWire Bandit wargame", "Linux Journey website", "Try out different Linux distributions", "Complete Linux命令行与Shell脚本编程大全"]
+            },
+            {
+                title: "Scripting Skills",
+                description: "Develop scripting abilities to automate tasks. Focus on Bash and Python scripting for security automation. Scripting will make you much more efficient in your work.",
+                resources: ["Bash scripting tutorials", "Python for Security automation", "Practice on Exercism", "Read 'Black Hat Python'", "Try automating routine tasks with scripts"]
+            },
+            {
+                title: "Networking Basics",
+                description: "Learn networking fundamentals including TCP/IP, DNS, HTTP/HTTPS, firewalls, and network protocols. Understanding networks is critical for cybersecurity.",
+                resources: ["Cisco Networking Basics", "Professor Messer Network+ videos", "Wireshark tutorials", "TryHackMe Networking rooms", "Read 'TCP/IP Illustrated' by Richard Stevens"]
+            },
+            {
+                title: "Security Fundamentals",
+                description: "Study core security concepts including encryption, authentication, access control, and security policies. This is where you start thinking like a security professional.",
+                resources: ["Cybrary Security courses", "Coursera Cybersecurity Specialization", "OWASP Top 10", "Security+ Certification study materials", "Try capture the flag (CTF) challenges"]
+            },
+            {
+                title: "Cybersecurity Architect",
+                description: "Congratulations! You've reached your goal! You now have the skills to design secure systems and lead security initiatives. Continue growing and learning in this exciting field.",
+                resources: ["Continue learning with advanced courses", "Participate in CTF competitions", "Join security communities", "Consider professional certifications like CISSP", "Start a blog to share your knowledge"]
             }
-            
-            function saveProgress() {
-                localStorage.setItem('cyberProgress', currentMilestone);
+        ];
+
+        // Start from 0
+        let currentMilestone = 0;
+        const totalMilestones = milestones.length - 1;
+
+        // Set initial position
+        updatePosition();
+        
+        // Event listeners for buttons
+        prevBtn.addEventListener('click', function() {
+            if (currentMilestone > 0) {
+                currentMilestone--;
+                updatePosition();
             }
         });
-    </script>
+        
+        nextBtn.addEventListener('click', function() {
+            if (currentMilestone < totalMilestones) {
+                currentMilestone++;
+                updatePosition();
+                
+                // Show celebration for completing a milestone (except for the first one)
+                if (currentMilestone > 0) {
+                    setTimeout(() => {
+                        celebration.classList.add('active');
+                    }, 1000);
+                }
+            }
+        });
+        
+        // Add click events to checkpoints
+        document.querySelectorAll('.checkpoint').forEach(checkpoint => {
+            checkpoint.addEventListener('click', function() {
+                const newMilestone = parseInt(this.getAttribute('data-milestone'));
+                if (newMilestone <= currentMilestone) {
+                    currentMilestone = newMilestone;
+                    updatePosition();
+                }
+            });
+        });
+        
+        function updatePosition() {
+            // Calculate position percentage (10% to 90% of the path)
+            const position = 10 + (currentMilestone * 10);
+            humanCharacter.style.left = `calc(${position}% - 30px)`;
+            
+            // Update progress text
+            const percentage = Math.round((currentMilestone / totalMilestones) * 100);
+            progressText.textContent = `You are at: ${milestones[currentMilestone].title} (${percentage}%)`;
+            
+            // Update milestone details
+            milestoneTitle.textContent = milestones[currentMilestone].title;
+            milestoneDescription.textContent = milestones[currentMilestone].description;
+            
+            // Update resources
+            resourcesList.innerHTML = '';
+            milestones[currentMilestone].resources.forEach(resource => {
+                const li = document.createElement('li');
+                li.textContent = resource;
+                resourcesList.appendChild(li);
+            });
+            
+            // Update button states
+            prevBtn.disabled = currentMilestone === 0;
+            nextBtn.disabled = currentMilestone === totalMilestones;
+            
+            // Add visual effect to current checkpoint
+            document.querySelectorAll('.checkpoint').forEach(cp => {
+                cp.style.background = '#fd79a8';
+                cp.style.transform = 'scale(1)';
+            });
+            
+            const currentCheckpoint = document.querySelector(`.checkpoint[data-milestone="${currentMilestone}"]`);
+            if (currentCheckpoint) {
+                currentCheckpoint.style.background = '#6a11cb';
+                currentCheckpoint.style.transform = 'scale(1.3)';
+            }
+        }
+    });
+</script>
+
 </body>
 </html>
